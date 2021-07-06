@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.Design.Serialization;
@@ -15,7 +16,9 @@ namespace GymManagerWebApp.Models
         public string Gender { get; set; }
         public DateTime CreatedAt { get; set; }
         public string ProfilePicture { get; set; }
-        public static object Identity { get; internal set; }
+        public static object Identity { get; set; }
+        public virtual IList<QuantityCarnet> QuantityCarnets { get; set; } = new List<QuantityCarnet>();
+        public virtual IList<TimeCarnet> TimeCarnets { get; set; } = new List<TimeCarnet>();
 
         public User()
         {

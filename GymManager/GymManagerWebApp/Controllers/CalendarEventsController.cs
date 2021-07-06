@@ -49,31 +49,6 @@ namespace GymManagerWebApp.Controllers
             var currentUser = await _userService.GetUserByIdAsync(currentUserId);
             var selectedEvent = await _calendarEventService.GetEventByIdAsync(eventId);
 
-            var userTimeCarnets = await _carnetService.GetPurchasedCarnets(currentUser.Email, "czasowy");
-            var userQtyCarnets = await _carnetService.GetPurchasedCarnets(currentUser.Email, "ilosciowy");
-
-            var isAnyTimeCarnetActivated = userTimeCarnets.Any(x => x.IsActive);
-            var isAnyQtyCarnetActivated = userQtyCarnets.Any(x => x.IsActive);
-            var isAnyQtyCarnetPurchased = userQtyCarnets.Any(x => x.CarnetCategory == "ilosciowy");
-
-            if (userTimeCarnets.Count == 0 && userQtyCarnets.Count == 0)
-            {
-                return View("Confirmations/NoPurchasedTickets");
-            }
-            
-            else if(!isAnyQtyCarnetActivated && isAnyQtyCarnetPurchased)
-            {
-                return View("Confirmations/NoActivatedTickets");
-            }
-            else if(isAnyQtyCarnetActivated)
-            {
-                var activeCarnet = userQtyCarnets.SingleOrDefault(x => x.IsActive);
-                var dbCarnet = await _dbContext.PurchasedCarnets.FindAsync(activeCarnet.Id);
-                dbCarnet.RemainQty -= 1;
-                await _dbContext.SaveChangesAsync();
-                await _reservationService.ReserveEventAsync(currentUser, selectedEvent);
-                await _calendarEventService.ReduceAvailableVacanciesAsync(eventId);
-            }
 
             return View("Confirmations/BookEventConfirmation");
         }
@@ -83,16 +58,7 @@ namespace GymManagerWebApp.Controllers
         {
             var eventId = await _calendarEventService.GetEventIdByReservationIdAsync(reservationNr);
 
-            var userTimeCarnets = await _carnetService.GetPurchasedCarnets(User.Identity.Name, "czasowy");
-            var userQtyCarnets = await _carnetService.GetPurchasedCarnets(User.Identity.Name, "ilosciowy");
-
-            var activeCarnet = userQtyCarnets.SingleOrDefault(x => x.IsActive);
-            var dbCarnet = await _dbContext.PurchasedCarnets.FindAsync(activeCarnet.Id);
-            dbCarnet.RemainQty += 1;
-
-            var isAnyTimeCarnetActivated = userTimeCarnets.Any(x => x.IsActive);
-            var isAnyQtyCarnetActivated = userQtyCarnets.Any(x => x.IsActive);
-            var isAnyQtyCarnetPurchased = userQtyCarnets.Any(x => x.CarnetCategory == "ilosciowy");
+           
 
 
             await _reservationService.RemoveReservation(reservationNr);

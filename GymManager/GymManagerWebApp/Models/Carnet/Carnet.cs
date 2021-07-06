@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GymManagerWebApp.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,47 +8,31 @@ using System.Threading.Tasks;
 
 namespace GymManagerWebApp
 {
+    public class TimeCarnet : Carnet
+    {
+        public DateTime ActiveUntil { get; set; }
+    }
+
+    public class QuantityCarnet : Carnet
+    {
+        public int Etrances { get; set; }
+        public int RemainEtrances { get; set; }
+        public DateTime ActivationDates { get; set; }    
+    }
+
     public class Carnet
     {
         public int Id { get; set; }
-        public int CarnetTypeNumber { get; set; }
-        public string CarnetCategory { get; set; }
         public string Name { get; set; }
         public double Price { get; set; }
         public DateTime PurchasedAt { get; set; }
-        public string OwnerEmail { get; set; }
-        public int Quantity { get; set; }
-        public DateTime? UsedOn { get; set; }
-        public DateTime? ExpireDate { get; set; }
+        public DateTime? ActivatedOn { get; set; }
+        public DateTime? ExpirationDate { get; set; }
         public bool IsActive { get; set; }
-        public bool IsExpired { get; set; }
-        public int RemainQty { get; set; }
-
+        public bool Activated { get; set; }
+        public virtual User User { get; set; }
         public Carnet()
         {
-        }
-
-        public Carnet(int carnetTypeNumber, string carnetCategory, string name, double price, int quantity)
-        {
-            CarnetTypeNumber = carnetTypeNumber;
-            CarnetCategory = carnetCategory;
-            Name = name;
-            Price = price;
-            Quantity = quantity;
-        }
-
-        public Carnet(int carnetTypeNumber, string carnetCategory, string name, double price, int quantity, string ownerEmail, DateTime purchasedAt,
-            int remainQty, bool isActive)
-        {
-            CarnetTypeNumber = carnetTypeNumber;
-            CarnetCategory = carnetCategory;
-            Name = name;
-            Price = price;
-            Quantity = quantity;
-            OwnerEmail = ownerEmail;
-            PurchasedAt = purchasedAt;
-            RemainQty = remainQty;
-            IsActive = isActive;
         }
     }
 }
