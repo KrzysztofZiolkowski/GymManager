@@ -17,8 +17,6 @@ namespace GymManagerWebApp.Models
         public DateTime CreatedAt { get; set; }
         public string ProfilePicture { get; set; }
         public static object Identity { get; set; }
-        public virtual IList<QuantityCarnet> QuantityCarnets { get; set; } = new List<QuantityCarnet>();
-        public virtual IList<TimeCarnet> TimeCarnets { get; set; } = new List<TimeCarnet>();
 
         public User()
         {

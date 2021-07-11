@@ -39,10 +39,10 @@ namespace GymManagerWebApp.Services
                     .Where(x=>x.NormalizedEmail != currentUserEmail)
                     .Select(x => x).ToListAsync();
         }
-        public async Task<User> GetUserByIdAsync(string userId)
+        public async Task<Customer> GetUserByIdAsync(string userId)
         {
-            return await _dbContext.Users
-                    .SingleOrDefaultAsync(x => x.Id == userId);
+            return (Customer)await _dbContext.Users
+                    .FindAsync(userId);
         }
         public async Task<User> GetUserByEmailAsync(string email)
         {

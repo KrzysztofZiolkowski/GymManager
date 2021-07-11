@@ -11,21 +11,23 @@ namespace GymManagerWebApp.Models
         {
         }
 
-        public Reservation(DateTime activationDate, bool canBeCanceled, bool isActive, User user, CalendarEvent calendarEvent)
+        public Reservation(DateTime activationDate, bool canBeCanceled, bool isActive, Customer customer, CalendarEvent calendarEvent)
         {
             ActivationDate = activationDate;
             CanBeCanceled = canBeCanceled;
             IsActive = isActive;
-            User = user;
+            Customer = customer;
             CalendarEvent = calendarEvent;
         }
 
         public int Id { get; set; }
-        public DateTime ActivationDate{ get; set; }
+        public DateTime ActivationDate { get; set; }
         public bool CanBeCanceled { get; set; }
         public bool IsActive { get; set; }
-        public virtual User  User{ get; set; }
+        public virtual Customer Customer { get; set; }
         public virtual CalendarEvent CalendarEvent { get; set; }
+        public virtual TimeCarnetActivation TimeCarnetActivation {get;set;}
+        public virtual QuantityCarnetSingleActivation QuantityCarnetSingleActivation { get; set; }
 
     }
 }

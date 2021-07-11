@@ -15,7 +15,7 @@ namespace GymManagerWebApp.Services
         [Authorize(Roles = "Admin")]
         Task<User> GetUserByEmailAsync(string email);
         [Authorize(Roles = "Admin")]
-        Task<User> GetUserByIdAsync(string userId);
+        Task<Customer> GetUserByIdAsync(string userId);
         Task<List<User>> GetUsersAsync(string currentUserEmail);
         User CreateAddUserVievModel(AddUserViewModel model);
         EditUserViewModel CreateEditUserViewModel(User model, string modelRole, List<string> allRoles);

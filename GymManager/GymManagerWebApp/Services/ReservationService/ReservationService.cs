@@ -18,25 +18,25 @@ namespace GymManagerWebApp.Services.ReservationService
             _dbContext = dbContext;
         }
 
-        public async Task<List<Reservation>> GetReservationsByUserAsync(User user)
+        public async Task<List<Reservation>> GetReservationsByUserAsync(Customer customer)
         {
             var reservations = await _dbContext.Reservations
-            .Where(x => x.User == user)
+            .Where(x => x.Customer == customer)
             .Include(x=>x.CalendarEvent)
-            .Include(x=>x.User)
+            .Include(x=>x.Customer)
             .ToListAsync();
 
             return reservations;
         }
 
-        public async Task ReserveEventAsync(User currentUser, CalendarEvent eventToBook)
+        public async Task ReserveEventAsync(Customer currentCustomer, CalendarEvent eventToBook)
         {
             var reservation = new Reservation()
             {
                 ActivationDate = DateTime.UtcNow,
                 CanBeCanceled = true,
                 IsActive = true,
-                User = currentUser,
+                Customer = currentCustomer,
                 CalendarEvent = eventToBook,
             };
 

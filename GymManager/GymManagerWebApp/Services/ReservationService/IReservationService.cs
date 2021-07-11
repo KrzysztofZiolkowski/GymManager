@@ -7,8 +7,8 @@ namespace GymManagerWebApp.Services.ReservationService
 {
     public interface IReservationService
     {
-        Task ReserveEventAsync(User currentUser, CalendarEvent eventToBook);
-        Task<List<Reservation>> GetReservationsByUserAsync(User user);
+        Task ReserveEventAsync(Customer currentUser, CalendarEvent eventToBook);
+        Task<List<Reservation>> GetReservationsByUserAsync(Customer customer);
         Task RemoveReservation(int ReservationId);
     }
 }

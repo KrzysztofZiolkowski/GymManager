@@ -4,14 +4,16 @@ using GymManagerWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GymManagerWebApp.Migrations
 {
     [DbContext(typeof(GymManagerContext))]
-    partial class GymManagerContextModelSnapshot : ModelSnapshot
+    [Migration("20210711145621_NewModelsStructure")]
+    partial class NewModelsStructure
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,17 +58,37 @@ namespace GymManagerWebApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Activated")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ActivatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Discriminator")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ExpirationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("PurchasedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("Carnet");
 
@@ -124,68 +146,7 @@ namespace GymManagerWebApp.Migrations
                     b.ToTable("Exercises");
                 });
 
-            modelBuilder.Entity("GymManagerWebApp.Models.Purchase", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("CarnetId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CustomerId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsExpired")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CarnetId");
-
-                    b.HasIndex("CustomerId");
-
-                    b.ToTable("Purchases");
-                });
-
-            modelBuilder.Entity("GymManagerWebApp.Models.PurchaseActivation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsExploited")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("PurchaseId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PurchaseId")
-                        .IsUnique();
-
-                    b.ToTable("PurchaseActivations");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("PurchaseActivation");
-                });
-
-            modelBuilder.Entity("GymManagerWebApp.Models.QuantityCarnetSingleActivation", b =>
+            modelBuilder.Entity("GymManagerWebApp.Models.QuantityCarnetActivationDate", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -195,20 +156,14 @@ namespace GymManagerWebApp.Migrations
                     b.Property<DateTime>("ActivationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PurchaseActivationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReservationId")
+                    b.Property<int?>("QuantityCarnetId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PurchaseActivationId");
+                    b.HasIndex("QuantityCarnetId");
 
-                    b.HasIndex("ReservationId")
-                        .IsUnique();
-
-                    b.ToTable("QuantityCarnetSingleActivations");
+                    b.ToTable("QuantityCarnetActivationDate");
                 });
 
             modelBuilder.Entity("GymManagerWebApp.Models.Reservation", b =>
@@ -233,8 +188,8 @@ namespace GymManagerWebApp.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("TimeCarnetActivationId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -242,7 +197,7 @@ namespace GymManagerWebApp.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("TimeCarnetActivationId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Reservations");
                 });
@@ -271,6 +226,9 @@ namespace GymManagerWebApp.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CarnetId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -337,6 +295,8 @@ namespace GymManagerWebApp.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CarnetId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -486,6 +446,9 @@ namespace GymManagerWebApp.Migrations
                 {
                     b.HasBaseType("GymManagerWebApp.Carnet");
 
+                    b.Property<int>("RemainEtrances")
+                        .HasColumnType("int");
+
                     b.Property<int>("TotalEtrances")
                         .HasColumnType("int");
 
@@ -496,33 +459,10 @@ namespace GymManagerWebApp.Migrations
                 {
                     b.HasBaseType("GymManagerWebApp.Carnet");
 
-                    b.Property<int>("PeriodInDays")
-                        .HasColumnType("int");
-
-                    b.HasDiscriminator().HasValue("TimeCarnet");
-                });
-
-            modelBuilder.Entity("GymManagerWebApp.Models.QuantityCarnetActivation", b =>
-                {
-                    b.HasBaseType("GymManagerWebApp.Models.PurchaseActivation");
-
-                    b.Property<int>("EtrancesLeft")
-                        .HasColumnType("int");
-
-                    b.HasDiscriminator().HasValue("QuantityCarnetActivation");
-                });
-
-            modelBuilder.Entity("GymManagerWebApp.Models.TimeCarnetActivation", b =>
-                {
-                    b.HasBaseType("GymManagerWebApp.Models.PurchaseActivation");
-
-                    b.Property<DateTime>("ActivationDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("ActiveUntil")
                         .HasColumnType("datetime2");
 
-                    b.HasDiscriminator().HasValue("TimeCarnetActivation");
+                    b.HasDiscriminator().HasValue("TimeCarnet");
                 });
 
             modelBuilder.Entity("GymManagerWebApp.Models.Coach", b =>
@@ -569,6 +509,13 @@ namespace GymManagerWebApp.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("GymManagerWebApp.Carnet", b =>
+                {
+                    b.HasOne("GymManagerWebApp.Models.Customer", null)
+                        .WithMany("Carnets")
+                        .HasForeignKey("CustomerId");
+                });
+
             modelBuilder.Entity("GymManagerWebApp.Models.CalendarEvent", b =>
                 {
                     b.HasOne("GymManagerWebApp.Models.Coach", "Coach")
@@ -590,49 +537,13 @@ namespace GymManagerWebApp.Migrations
                     b.Navigation("Room");
                 });
 
-            modelBuilder.Entity("GymManagerWebApp.Models.Purchase", b =>
+            modelBuilder.Entity("GymManagerWebApp.Models.QuantityCarnetActivationDate", b =>
                 {
-                    b.HasOne("GymManagerWebApp.Carnet", "Carnet")
-                        .WithMany()
-                        .HasForeignKey("CarnetId");
+                    b.HasOne("GymManagerWebApp.QuantityCarnet", "QuantityCarnet")
+                        .WithMany("ActivationDates")
+                        .HasForeignKey("QuantityCarnetId");
 
-                    b.HasOne("GymManagerWebApp.Models.Customer", "Customer")
-                        .WithMany("Purchases")
-                        .HasForeignKey("CustomerId");
-
-                    b.Navigation("Carnet");
-
-                    b.Navigation("Customer");
-                });
-
-            modelBuilder.Entity("GymManagerWebApp.Models.PurchaseActivation", b =>
-                {
-                    b.HasOne("GymManagerWebApp.Models.Purchase", "Purchase")
-                        .WithOne("Activation")
-                        .HasForeignKey("GymManagerWebApp.Models.PurchaseActivation", "PurchaseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Purchase");
-                });
-
-            modelBuilder.Entity("GymManagerWebApp.Models.QuantityCarnetSingleActivation", b =>
-                {
-                    b.HasOne("GymManagerWebApp.Models.QuantityCarnetActivation", "QuantityCarnetActivation")
-                        .WithMany("QuantityCarnetSingleActivations")
-                        .HasForeignKey("PurchaseActivationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GymManagerWebApp.Models.Reservation", "Reservation")
-                        .WithOne("QuantityCarnetSingleActivation")
-                        .HasForeignKey("GymManagerWebApp.Models.QuantityCarnetSingleActivation", "ReservationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("QuantityCarnetActivation");
-
-                    b.Navigation("Reservation");
+                    b.Navigation("QuantityCarnet");
                 });
 
             modelBuilder.Entity("GymManagerWebApp.Models.Reservation", b =>
@@ -641,19 +552,24 @@ namespace GymManagerWebApp.Migrations
                         .WithMany()
                         .HasForeignKey("CalendarEventId");
 
-                    b.HasOne("GymManagerWebApp.Models.Customer", "Customer")
+                    b.HasOne("GymManagerWebApp.Models.Customer", null)
                         .WithMany("Reservations")
                         .HasForeignKey("CustomerId");
 
-                    b.HasOne("GymManagerWebApp.Models.TimeCarnetActivation", "TimeCarnetActivation")
-                        .WithMany("Reservations")
-                        .HasForeignKey("TimeCarnetActivationId");
+                    b.HasOne("GymManagerWebApp.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("CalendarEvent");
 
-                    b.Navigation("Customer");
+                    b.Navigation("User");
+                });
 
-                    b.Navigation("TimeCarnetActivation");
+            modelBuilder.Entity("GymManagerWebApp.Models.User", b =>
+                {
+                    b.HasOne("GymManagerWebApp.Carnet", null)
+                        .WithMany("Users")
+                        .HasForeignKey("CarnetId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -707,24 +623,14 @@ namespace GymManagerWebApp.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("GymManagerWebApp.Models.Purchase", b =>
+            modelBuilder.Entity("GymManagerWebApp.Carnet", b =>
                 {
-                    b.Navigation("Activation");
+                    b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("GymManagerWebApp.Models.Reservation", b =>
+            modelBuilder.Entity("GymManagerWebApp.QuantityCarnet", b =>
                 {
-                    b.Navigation("QuantityCarnetSingleActivation");
-                });
-
-            modelBuilder.Entity("GymManagerWebApp.Models.QuantityCarnetActivation", b =>
-                {
-                    b.Navigation("QuantityCarnetSingleActivations");
-                });
-
-            modelBuilder.Entity("GymManagerWebApp.Models.TimeCarnetActivation", b =>
-                {
-                    b.Navigation("Reservations");
+                    b.Navigation("ActivationDates");
                 });
 
             modelBuilder.Entity("GymManagerWebApp.Models.Coach", b =>
@@ -734,7 +640,7 @@ namespace GymManagerWebApp.Migrations
 
             modelBuilder.Entity("GymManagerWebApp.Models.Customer", b =>
                 {
-                    b.Navigation("Purchases");
+                    b.Navigation("Carnets");
 
                     b.Navigation("Reservations");
                 });
