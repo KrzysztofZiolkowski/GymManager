@@ -22,8 +22,9 @@ namespace GymManagerWebApp.Models
         {
         }
 
-        public User(string firstName, string lastName, string gender, DateTime createdAt, string profilePicture)
+        public User(string id,string firstName, string lastName, string gender, DateTime createdAt, string profilePicture)
         {
+            Id = id;
             FirstName = firstName;
             LastName= lastName;
             Gender = gender;
