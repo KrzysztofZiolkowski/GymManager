@@ -20,12 +20,15 @@ namespace GymManagerWebApp.Services
         User CreateAddUserVievModel(AddUserViewModel model);
         EditUserViewModel CreateEditUserViewModel(User model, string modelRole, List<string> allRoles);
         User CreateUpdatedUserModel(User user, EditUserViewModel model);
-        Task<SignInResult> LoginAsync(Login login);
+        Task<SignInResult> LoginAsync(LoginViewModel login);
         Task LogoutAsync();
         List<User> SortUsersByEmails(List<User> users);
         Task<string> GetUserIdByEmailAsync(string email);
         Task<IdentityResult> CreateUser(AddUserViewModel model);
         Task<IdentityResult> RemoveUser(string userId);
-        Task<IdentityResult> UpdateUser(EditUserViewModel newModel);
+        Task<IdentityResult> UpdateUser(EditProfileViewModel newModel);
+        Customer CreateCustomer(RegisterCustomerViewModel model);
+        EditProfileViewModel CreateEditProfileViewModel(Customer currrentUser);
+        User UpdateUserAttributes(EditProfileViewModel userFromView, User userToUpdate);
     }
 }

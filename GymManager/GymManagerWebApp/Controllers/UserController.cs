@@ -25,49 +25,40 @@ namespace GymManagerWebApp.Controllers
         }
 
         #region Register
-        [Route("SignIn")]
+        [Route("Register")]
         [HttpGet]
-        public IActionResult SignIn()
+        public IActionResult Register()
         {
-            var user = new SignInUserViewModel();
-            return View(user);
+            var customerViewModel = new RegisterCustomerViewModel();
+            return View(customerViewModel);
         }
 
-        [Route("SignIn")]
+        [Route("Register")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SignInAsync(SignInUserViewModel model)
+        public async Task<IActionResult> Register(RegisterCustomerViewModel newCustomer)
         {
             if (ModelState.IsValid)
             {
-                var user = new User
-                {
-                    Email = model.Email,
-                    UserName = model.Email,
-                    FirstName = char.ToUpper(model.FirstName[0]) + model.FirstName.Substring(1),
-                    LastName = char.ToUpper(model.LastName[0]) + model.LastName.Substring(1),
-                    PhoneNumber = model.PhoneNumber,
-                    Gender = model.Gender,
-                    CreatedAt = DateTime.UtcNow,
-                    ProfilePicture = _fileService.UploadFile(model),
-                };
-
-                var result = await _userManager.CreateAsync(user, model.Password1);
+                var customer = _userService.CreateCustomer(newCustomer);
+                var result = await _userManager.CreateAsync(customer, newCustomer.Password1);
+                string roleName = "Klient";
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation($"User register succeed, id: {user.Id} ");
-                    await _userManager.AddToRoleAsync(user,"Klient");
+                    await _userManager.AddToRoleAsync(customer, roleName);
+                    _logger.LogInformation($"Customer register succeed, id: {customer.Id} ");
                     return View("SignInConfirmation");
                 }
 
-                foreach (var error in result.Errors)
+                else
                 {
-                    _logger.LogDebug($"Failed to register new user, details: {error.Description}");
-                    ModelState.AddModelError("", error.Description);
+                    foreach (var error in result.Errors)
+                    {
+                        _logger.LogDebug($"Failed to register new user, details: {error.Description}");
+                        ModelState.AddModelError("", error.Description);
+                    }
                 }
-                ModelState.Clear();
-                ModelState.AddModelError("", "Użytkownik o tej nazwie jest już zarejestrowany, spróbuj jeszcze raz!");
             }
             return View();
         }
@@ -78,19 +69,19 @@ namespace GymManagerWebApp.Controllers
         [HttpGet]
         public IActionResult LogIn()
         {
-            var login = new Login();
-            return View(login);
+            var loginViewModel = new LoginViewModel();
+            return View(loginViewModel);
         }
 
         [Route("LogIn")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LogInAsync(Login login, string returnUrl)
+        public async Task<IActionResult> LogIn(LoginViewModel model, string returnUrl)
         {
             if (ModelState.IsValid)
             {
-                var result = await _userService.LoginAsync(login);
-                var user = await _userService.GetUserByEmailAsync(login.Email);
+                var result = await _userService.LoginAsync(model);
+                var user = await _userService.GetUserByEmailAsync(model.Email);
 
                 if (result.Succeeded)
                 {
@@ -107,7 +98,7 @@ namespace GymManagerWebApp.Controllers
                 ModelState.AddModelError("", "Nieprawidłowe dane logowania. Spróbój ponownie");
             }
 
-            return View("LogIn", login);
+            return View("LogIn", model);
         }
 
         [Route("Logout")]
@@ -115,86 +106,54 @@ namespace GymManagerWebApp.Controllers
         public async Task<IActionResult> Logout()
         {
             await _userService.LogoutAsync();
+
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var userId = user.Id;
+
             _logger.LogInformation($"User with id: {userId} logged out");
             return RedirectToAction("Index", "Home");
         }
         #endregion
 
         [HttpGet]
-        public async Task<IActionResult> AccountDetails()
+        public IActionResult AccountDetails()
         {
-            string userEmail = User.Identity.Name;
-            var user = await _userService.GetUserByEmailAsync(userEmail);
-            return View("AccountDetails",user);
-        }
-
-        [HttpPost]
-        public IActionResult AccountDetails(User model)
-        {
-            return RedirectToAction(nameof(EditProfile));
+            return View("AccountDetails", User.Identity);
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditProfile()
+        public IActionResult EditProfile()
         {
-            var userEmail = User.Identity.Name;
-            var user = await _userService.GetUserByEmailAsync(userEmail);
+            var currentUser = (Customer)User.Identity;
+            var currentUserEditViewModel = _userService.CreateEditProfileViewModel(currentUser);
 
-            var model = new EditProfileViewModel()
-            {
-                Id = user.Id,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Gender = user.Gender,
-                PhoneNumber = user.PhoneNumber,
-                ProfilePicturePath = user.ProfilePicture,
-            };
-
-            return View(model);
+            return View(currentUserEditViewModel);
         }
 
-
         [HttpPost]
-        public async Task<IActionResult> EditProfile(EditProfileViewModel model)
+        public async Task<IActionResult> EditProfile(EditProfileViewModel newUserData)
         {
-            var userEmail = User.Identity.Name;
-            var user = await _userService.GetUserByEmailAsync(userEmail);
-
-            user.FirstName = model.FirstName;
-            user.LastName = model.LastName;
-            user.PhoneNumber = model.PhoneNumber;
-            user.Gender = model.Gender;
-
-            if (model.ProfilePicture != null)
-            {
-                user.ProfilePicture = _fileService.UploadFile(model);
-            }
-
-            var result = await _userManager.UpdateAsync(user);
+            var result = await _userService.UpdateUser(newUserData);
 
             if (result.Succeeded)
             {
-                _logger.LogInformation($"User of id: {user.Id} | Profle edited by his own");
+                _logger.LogInformation($"User of id: {newUserData.Id} | Profle edited by his own");
                 return View("EditProfileConfirmation");
             }
 
             foreach (var error in result.Errors)
             {
-                _logger.LogDebug($"User of id: {user.Id} | Failed to edit profile by his own | Details: {error.Description}");
+                _logger.LogDebug($"User of id: {newUserData.Id} | Failed to edit profile by his own | Details: {error.Description}");
                 ModelState.AddModelError("", error.Description);
             }
-            return View(model);
+            return View(newUserData);
 
         }
 
         [HttpPost]
-        public async Task<IActionResult> RemoveProfilePicture(EditProfileViewModel model)
+        public async Task<IActionResult> RemoveProfilePicture(EditProfileViewModel currentUser)
         {
-            var userEmail = User.Identity.Name;
-            var user = await _userService.GetUserByEmailAsync(userEmail);
+            var user = await _userService.GetUserByIdAsync(currentUser.Id);
 
             user.ProfilePicture = null;
             await _userManager.UpdateAsync(user);

@@ -4,10 +4,11 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.Design.Serialization;
 using Microsoft.AspNetCore.Http;
+using GymManagerWebApp.Attributes;
 
 namespace GymManagerWebApp.Models
 {
-    public class SignInUserViewModel : IdentityUser
+    public class RegisterCustomerViewModel : IdentityUser
     {
         [Required(ErrorMessage = "Wymagane imię")]
         [StringLength(maximumLength: 20, MinimumLength= 3,ErrorMessage ="Nieprawidłowe imię")]
@@ -28,6 +29,7 @@ namespace GymManagerWebApp.Models
         public override string PhoneNumber { get; set; }
         
         [Required(ErrorMessage ="Wymagany adres e-mail")]
+        [EmailExists("Podany email jest już zajęty, użyj innego adresu email!")]
         [EmailAddress(ErrorMessage ="Nieprawidłowy adres e-mail")]
         [DataType(DataType.EmailAddress)]
         public override string Email { get; set; }
