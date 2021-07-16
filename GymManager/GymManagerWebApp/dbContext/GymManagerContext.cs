@@ -11,13 +11,8 @@ namespace GymManagerWebApp.Data
 {
     public class GymManagerContext : IdentityDbContext<User>
     {
-        public GymManagerContext(DbContextOptions<GymManagerContext> options)
-            : base(options)
-        {
-        }
-
-        public GymManagerContext()
-        { }
+        public GymManagerContext(DbContextOptions<GymManagerContext> options): base(options){}
+        public GymManagerContext(){ }
 
         public override DbSet<User> Users { get; set; }
         public DbSet<Customer> Customers { get; set; }
@@ -29,6 +24,7 @@ namespace GymManagerWebApp.Data
         public DbSet<Coach> Coaches { get; set; }
         public DbSet<Exercise> Exercises { get; set; }
         public DbSet<Room> Rooms { get; set; }
+        public DbSet<Carnet> Carnets { get; set; }
         public DbSet<PurchaseActivation> PurchaseActivations { get; set; }
         public DbSet<TimeCarnetActivation> TimeCarnetActivations { get; set; }
         public DbSet<QuantityCarnetActivation> QuantityCarnetAcitvations { get; set; }
@@ -36,8 +32,9 @@ namespace GymManagerWebApp.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=localhost;Database=GymManager;Integrated Security=true;");
             base.OnConfiguring(optionsBuilder);
+            optionsBuilder.UseSqlServer("Server=localhost;Database=GymManager;Integrated Security=true;");
+            
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

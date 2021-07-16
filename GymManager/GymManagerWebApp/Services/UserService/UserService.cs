@@ -39,12 +39,7 @@ namespace GymManagerWebApp.Services
         {
             await _signInManager.SignOutAsync();
         }
-        public async Task<List<User>> GetUsersAsync(string currentUserEmail)
-        {
-            return await _dbContext.Users
-                    .Where(x=>x.NormalizedEmail != currentUserEmail)
-                    .Select(x => x).ToListAsync();
-        }
+
         public async Task<Customer> GetUserByIdAsync(string userId)
         {
             return (Customer)await _dbContext.Users
@@ -55,11 +50,6 @@ namespace GymManagerWebApp.Services
             return await _dbContext.Users
                     .SingleOrDefaultAsync(x => x.Email == email);
         }
-        public async Task<User> UpdateUser(User user)
-        {
-            await _dbContext.SaveChangesAsync();
-            return user;
-        }
         public async Task<string> GetUserIdByEmailAsync(string email)
         {
             return await _dbContext.Users
@@ -67,11 +57,33 @@ namespace GymManagerWebApp.Services
                 .Select(x => x.Id)
                 .SingleOrDefaultAsync();
         }
+        public async Task<List<User>> GetUsersAsync(string currentUserEmail)
+        {
+            return await _dbContext.Users
+                    .Where(x => x.NormalizedEmail != currentUserEmail)
+                    .Select(x => x).ToListAsync();
+        }
+        public async Task<string> GetRoleName(User user)
+        {
+            var roleId = _dbContext.UserRoles
+                .Where(x => x.UserId == user.Id)
+                .Select(x => x.RoleId)
+                .ToString();
+
+            var roleName = await _dbContext.Roles
+                .Where(x => x.Id == roleId)
+                .Select(x => x.Name)
+                .SingleOrDefaultAsync();
+
+            return roleName;
+        }
         public List<User> SortUsersByEmails(List<User> users)
         {
             return users.OrderBy(x => x.Email).ToList();
         }
-        public User CreateAddUserVievModel(AddUserViewModel model)
+
+
+        public User CreateAddUserViewModel(AddUserViewModel model)
         {
             var user = new User()
             {
@@ -85,21 +97,7 @@ namespace GymManagerWebApp.Services
             };
             return user;
         }
-        public async Task<string> GetRoleName (User user)
-        {
-            var roleId = _dbContext.UserRoles
-                .Where(x => x.UserId == user.Id)
-                .Select(x => x.RoleId)
-                .ToString();
-                
-            var roleName = await _dbContext.Roles
-                .Where(x => x.Id == roleId)
-                .Select(x => x.Name)
-                .SingleOrDefaultAsync();
-
-            return roleName;
-        }
-        public Customer CreateCustomer(RegisterCustomerViewModel model)
+        public Customer CreateCustomerViewModel(RegisterCustomerViewModel model)
         {
             var customer = new Customer
             {
@@ -115,11 +113,7 @@ namespace GymManagerWebApp.Services
 
             return customer;
         }
-        public string FormatTextFirstLetterBigRestSmall(string textToTransform)
-        {
-            return char.ToUpper(textToTransform[0]) + textToTransform.Substring(1);
-        }
-        public EditUserViewModel CreateEditUserViewModel (User user, string userRole, List<string> allRoles)
+        public EditUserViewModel CreateEditUserViewModel(User user, string userRole, List<string> allRoles)
         {
             var userViewModel = new EditUserViewModel()
             {
@@ -136,16 +130,16 @@ namespace GymManagerWebApp.Services
             };
             return userViewModel;
         }
-        public User CreateUpdatedUserModel(User user, EditUserViewModel model)
+        public User CreateUpdatedUserModel(User userToUpdate, EditProfileViewModel newUserData)
         {
-            user.Email = model.Email;
-            user.FirstName = model.FirstName;
-            user.LastName = model.LastName;
-            user.Email = model.Email;
-            user.PhoneNumber = model.PhoneNumber;
-            user.Gender = model.Gender;
+            userToUpdate.Email = newUserData.Email;
+            userToUpdate.FirstName = newUserData.FirstName;
+            userToUpdate.LastName = newUserData.LastName;
+            userToUpdate.Email = newUserData.Email;
+            userToUpdate.PhoneNumber = newUserData.PhoneNumber;
+            userToUpdate.Gender = newUserData.Gender;
 
-            return user;
+            return userToUpdate;
         }
         public EditProfileViewModel CreateEditProfileViewModel(Customer currrentUser)
         {
@@ -160,14 +154,21 @@ namespace GymManagerWebApp.Services
                 ProfilePicturePath = currrentUser.ProfilePicture,
             };
         }
-        public async Task<IdentityResult> CreateUser (AddUserViewModel model)
+        public async Task<IdentityResult> CreateUser(AddUserViewModel model)
         {
-            var newUser = CreateAddUserVievModel(model);
+            var newUser = CreateAddUserViewModel(model);
             await _userManager.AddToRoleAsync(newUser, model.Role);
             var result = await _userManager.CreateAsync(newUser, model.Password1);
 
             return result;
         }
+
+        
+        public string FormatTextFirstLetterBigRestSmall(string textToTransform)
+        {
+            return char.ToUpper(textToTransform[0]) + textToTransform.Substring(1);
+        }
+
         public async Task<IdentityResult> RemoveUser (string userId)
         {
             var userToRemove = await _userManager.FindByIdAsync(userId);
@@ -176,8 +177,6 @@ namespace GymManagerWebApp.Services
         public async Task<IdentityResult> UpdateUser (EditProfileViewModel newModel)
         {
             var userToUpdate = await _userManager.FindByIdAsync(newModel.Id);
-
-            await UpdateUserRole(userToUpdate, newModel.CurrentUserRole);
             var updatedUser = CreateUpdatedUserModel(userToUpdate, newModel);
 
             return await _userManager.UpdateAsync(updatedUser);

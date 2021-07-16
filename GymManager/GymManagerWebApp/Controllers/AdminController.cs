@@ -116,23 +116,23 @@ namespace GymManagerWebApp.Controllers
             return View(userViewModel);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> EditUser(EditUserViewModel model)
-        {
-            var currentAdminEmail = _userService.GetUserByEmailAsync(User.Identity.Name);
-            var result = await _userService.UpdateUser(model);
+        //[HttpPost]
+        //public async Task<IActionResult> EditUser(EditUserViewModel model)
+        //{
+        //    var currentAdminEmail = _userService.GetUserByEmailAsync(User.Identity.Name);
+        //    var result = await _userService.UpdateUser(model);
 
-            if (result.Succeeded)
-            {
-                _logger.LogInformation($"Administrator with id: {currentAdminEmail.Id} | Edited user{model.Id}");
-                return View("Confirmations/EditUserConfirmation");
-            }
-            foreach (var error in result.Errors)
-            {
-                _logger.LogDebug($"Administrator with id: {currentAdminEmail.Id} | Failed to edit user with id: {model.Id} | Details: {error.Description}");
-                ModelState.AddModelError("", error.Description);
-            }
-            return View(model);
-        }
+        //    if (result.Succeeded)
+        //    {
+        //        _logger.LogInformation($"Administrator with id: {currentAdminEmail.Id} | Edited user{model.Id}");
+        //        return View("Confirmations/EditUserConfirmation");
+        //    }
+        //    foreach (var error in result.Errors)
+        //    {
+        //        _logger.LogDebug($"Administrator with id: {currentAdminEmail.Id} | Failed to edit user with id: {model.Id} | Details: {error.Description}");
+        //        ModelState.AddModelError("", error.Description);
+        //    }
+        //    return View(model);
+        //}
     }
 }

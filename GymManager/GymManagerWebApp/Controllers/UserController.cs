@@ -40,7 +40,7 @@ namespace GymManagerWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var customer = _userService.CreateCustomer(newCustomer);
+                var customer = _userService.CreateCustomerViewModel(newCustomer);
                 var result = await _userManager.CreateAsync(customer, newCustomer.Password1);
                 string roleName = "Klient";
 

@@ -17,9 +17,8 @@ namespace GymManagerWebApp.Services
         [Authorize(Roles = "Admin")]
         Task<Customer> GetUserByIdAsync(string userId);
         Task<List<User>> GetUsersAsync(string currentUserEmail);
-        User CreateAddUserVievModel(AddUserViewModel model);
+        User CreateAddUserViewModel(AddUserViewModel model);
         EditUserViewModel CreateEditUserViewModel(User model, string modelRole, List<string> allRoles);
-        User CreateUpdatedUserModel(User user, EditUserViewModel model);
         Task<SignInResult> LoginAsync(LoginViewModel login);
         Task LogoutAsync();
         List<User> SortUsersByEmails(List<User> users);
@@ -27,7 +26,7 @@ namespace GymManagerWebApp.Services
         Task<IdentityResult> CreateUser(AddUserViewModel model);
         Task<IdentityResult> RemoveUser(string userId);
         Task<IdentityResult> UpdateUser(EditProfileViewModel newModel);
-        Customer CreateCustomer(RegisterCustomerViewModel model);
+        Customer CreateCustomerViewModel(RegisterCustomerViewModel model);
         EditProfileViewModel CreateEditProfileViewModel(Customer currrentUser);
         User UpdateUserAttributes(EditProfileViewModel userFromView, User userToUpdate);
     }

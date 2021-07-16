@@ -34,4 +34,8 @@
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.13.0-readme-preview" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\AdminService\" />
+  </ItemGroup>
+
 </Project>

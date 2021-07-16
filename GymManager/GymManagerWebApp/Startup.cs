@@ -17,6 +17,7 @@ using GymManagerWebApp.Services.CarnetService;
 using GymManagerWebApp.Services.FileService;
 using GymManagerWebApp.Services.RolesService;
 using GymManagerWebApp.Services.ReservationService;
+using GymManagerWebApp.dbMock;
 
 namespace GymManagerWebApp
 {
@@ -31,9 +32,9 @@ namespace GymManagerWebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<GymManagerContext>(options => options.
-                UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
-            
+            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<GymManagerContext>(o => o.UseSqlServer(connectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+
             services.AddIdentity<User, IdentityRole>(options => { options.Password.RequireNonAlphanumeric = false; }).AddEntityFrameworkStores<GymManagerContext>();
 
             services.AddControllersWithViews();
@@ -78,6 +79,12 @@ namespace GymManagerWebApp
                     name: "User",
                     pattern: "{controller=User}/{action=SignIn}/{id?}");
             });
+
+            using var scope = app.ApplicationServices.CreateScope();
+            using var context = scope.ServiceProvider.GetService<GymManagerContext>();
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
+            ContextMock.MockExampleData(context);
         }
     }
 }
