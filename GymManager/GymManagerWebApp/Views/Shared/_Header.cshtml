@@ -21,13 +21,13 @@
                         </li>
                         <li class="nav-item">
                             <a class="link-menu disabled" href="#">Zalogowany jako: @User.Identity.Name</a>
-                            <a class="link-menu" asp-area="" asp-controller="User" asp-action="Logout">Wyloguj</a>
+                            <a class="link-menu" asp-area="" asp-controller="Customer" asp-action="Logout">Wyloguj</a>
                         </li>
                     }
                     else
                     {
                         <li class="nav-item">
-                            <a class="link-menu" asp-area="" asp-controller="User" asp-action="AccountDetails">Twoje konto</a>
+                            <a class="link-menu" asp-area="" asp-controller="Customer" asp-action="AccountDetails">Twoje konto</a>
                         </li>
                         <li class="nav-item">
                             <a class="link-menu" asp-area="" asp-controller="Carnet" asp-action="PurchasedCarnets">Zakupione karnety</a>
@@ -40,7 +40,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="link-menu disabled" href="#">Zalogowany jako: @User.Identity.Name</a>
-                            <a class="link-menu" asp-area="" asp-controller="User" asp-action="Logout">Wyloguj</a>
+                            <a class="link-menu" asp-area="" asp-controller="Customer" asp-action="Logout">Wyloguj</a>
                         </li>
                     }
                 }
@@ -54,8 +54,8 @@
                         <a class="link-menu" asp-area="" asp-controller="Carnet" asp-action="BuyCarnet">Kup karnet</a>
                     </li>
                     <li class="nav-item">
-                        <a class="link-menu" asp-area="" asp-controller="User" asp-action="LogIn">Logowanie</a>
-                        <a class="link-menu" asp-area="" asp-controller="User" asp-action="Register">Rejestracja</a>
+                        <a class="link-menu" asp-area="" asp-controller="Customer" asp-action="LogIn">Logowanie</a>
+                        <a class="link-menu" asp-area="" asp-controller="Customer" asp-action="Register">Rejestracja</a>
                     </li>
                 }
             </ul>

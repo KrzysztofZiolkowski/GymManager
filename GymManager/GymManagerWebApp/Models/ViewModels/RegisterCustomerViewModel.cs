@@ -52,7 +52,5 @@ namespace GymManagerWebApp.Models
         public DateTime CreatedAt { get; set; }
         public IFormFile ProfilePicture { get; set; }
         public static object Identity { get; internal set; }
-
-
     }
 }

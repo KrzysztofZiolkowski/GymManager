@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace GymManagerWebApp.Controllers
 {
-    public class UserController : Controller
+    public class CustomerController : Controller
     {
         private readonly IUserService _userService;
         private readonly IFileService _fileService;
         private readonly UserManager<User> _userManager;
-        private readonly ILogger<UserController> _logger;        
+        private readonly ILogger<CustomerController> _logger;        
 
-        public UserController(IUserService userService, UserManager<User> userManager, IFileService fileService, ILogger<UserController> logger)
+        public CustomerController(IUserService userService, UserManager<User> userManager, IFileService fileService, ILogger<CustomerController> logger)
         {
             _userService = userService;
             _userManager = userManager;
@@ -36,19 +36,20 @@ namespace GymManagerWebApp.Controllers
         [Route("Register")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterCustomerViewModel newCustomer)
+        public async Task<IActionResult> Register(RegisterCustomerViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var customer = _userService.CreateCustomerViewModel(newCustomer);
-                var result = await _userManager.CreateAsync(customer, newCustomer.Password1);
-                string roleName = "Klient";
+                var customer = _userService.CreateCustomerViewModel(model);
+                var result = await _userManager.CreateAsync(customer, model.Password1);
 
                 if (result.Succeeded)
                 {
+                    string roleName = dbMock.ContextMock.GetCustomerRoleName();
                     await _userManager.AddToRoleAsync(customer, roleName);
+
                     _logger.LogInformation($"Customer register succeed, id: {customer.Id} ");
-                    return View("SignInConfirmation");
+                    return View("RegisterConfirmation");
                 }
 
                 else
@@ -81,7 +82,7 @@ namespace GymManagerWebApp.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _userService.LoginAsync(model);
-                var user = await _userService.GetUserByEmailAsync(model.Email);
+                var customer = await _userService.GetUserByEmailAsync(model.Email);
 
                 if (result.Succeeded)
                 {
@@ -90,11 +91,11 @@ namespace GymManagerWebApp.Controllers
                         return LocalRedirect(returnUrl);
                     }
 
-                    _logger.LogInformation($"User with id: {user.Id} logged in");
+                    _logger.LogInformation($"User with id: {customer.Id} logged in");
                     return RedirectToAction("Index", "Home");
                 }
 
-                _logger.LogDebug($"Failed login attempt. User id: {user.Id}");
+                _logger.LogDebug($"Failed login attempt. User id: {customer.Id}");
                 ModelState.AddModelError("", "Nieprawidłowe dane logowania. Spróbój ponownie");
             }
 
@@ -107,56 +108,59 @@ namespace GymManagerWebApp.Controllers
         {
             await _userService.LogoutAsync();
 
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-            var userId = user.Id;
+            var customer = await _userManager.GetUserAsync(HttpContext.User);
+            var customerId = customer.Id;
 
-            _logger.LogInformation($"User with id: {userId} logged out");
+            _logger.LogInformation($"User with id: {customerId} logged out");
             return RedirectToAction("Index", "Home");
         }
         #endregion
 
         [HttpGet]
-        public IActionResult AccountDetails()
+        public async Task<IActionResult> AccountDetails()
         {
-            return View("AccountDetails", User.Identity);
+            var currentCustomerEmail = User.Identity.Name;
+            var currentCustomer = await _userService.GetUserByEmailAsync(currentCustomerEmail);
+
+            return View("AccountDetails", currentCustomer);
         }
 
         [HttpGet]
         public IActionResult EditProfile()
         {
-            var currentUser = (Customer)User.Identity;
-            var currentUserEditViewModel = _userService.CreateEditProfileViewModel(currentUser);
+            var currentCustomer = (Customer)User.Identity;
+            var currentUserEditViewModel = _userService.CreateEditProfileViewModel(currentCustomer);
 
             return View(currentUserEditViewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditProfile(EditProfileViewModel newUserData)
+        public async Task<IActionResult> EditProfile(EditProfileViewModel model)
         {
-            var result = await _userService.UpdateUser(newUserData);
+            var result = await _userService.UpdateUser(model);
 
             if (result.Succeeded)
             {
-                _logger.LogInformation($"User of id: {newUserData.Id} | Profle edited by his own");
+                _logger.LogInformation($"User of id: {model.Id} | Profle edited by his own");
                 return View("EditProfileConfirmation");
             }
 
             foreach (var error in result.Errors)
             {
-                _logger.LogDebug($"User of id: {newUserData.Id} | Failed to edit profile by his own | Details: {error.Description}");
+                _logger.LogDebug($"User of id: {model.Id} | Failed to edit profile by his own | Details: {error.Description}");
                 ModelState.AddModelError("", error.Description);
             }
-            return View(newUserData);
+            return View(model);
 
         }
 
         [HttpPost]
-        public async Task<IActionResult> RemoveProfilePicture(EditProfileViewModel currentUser)
+        public async Task<IActionResult> RemoveProfilePicture(EditProfileViewModel model)
         {
-            var user = await _userService.GetUserByIdAsync(currentUser.Id);
+            var currentCustomer = await _userService.GetUserByIdAsync(model.Id);
 
-            user.ProfilePicture = null;
-            await _userManager.UpdateAsync(user);
+            currentCustomer.ProfilePicture = null;
+            await _userManager.UpdateAsync(currentCustomer);
 
             return RedirectToAction(nameof(EditProfile));
         }

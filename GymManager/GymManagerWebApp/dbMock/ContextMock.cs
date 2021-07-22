@@ -12,18 +12,22 @@ namespace GymManagerWebApp.dbMock
 {
     public static class ContextMock
     {
-       public static void MockExampleData(GymManagerContext context)
+        private static string adminRoleName = "Administrator";
+        private static string coachRoleName = "Trener";
+        private static string receptionistRoleName = "Pracownik recepcji";
+        private static string customerRoleName = "Klient";
+
+        public static string GetCustomerRoleName()
+        {
+            return customerRoleName;
+        }
+        public static void MockExampleData(GymManagerContext context)
         {
             {
-                var adminRoleName = "Administrator";
-                var coachRoleName = "Trener";
-                var receptionistRoleName = "Pracownik recepcji";
-                var customerRoleName = "Klient";
-
-                var adminIdentityRole = new IdentityRole(adminRoleName);
-                var coachIdentityRole = new IdentityRole(coachRoleName);
-                var receptionistIdentityRole = new IdentityRole(receptionistRoleName);
-                var customerIdentityRole = new IdentityRole(customerRoleName);
+                var adminIdentityRole = new IdentityRole() { Name = adminRoleName, NormalizedName = adminRoleName };
+                var coachIdentityRole = new IdentityRole() { Name = coachRoleName, NormalizedName = coachRoleName };
+                var receptionistIdentityRole = new IdentityRole() { Name = receptionistRoleName, NormalizedName = receptionistRoleName };
+                var customerIdentityRole = new IdentityRole() { Name = customerRoleName, NormalizedName = customerRoleName };
 
                 var admin = new User("Krzysztof", "Ziółkowski", "Mężczyzna", DateTime.UtcNow, null);
                 var customer1 = new Customer("Patryk", "Zakrzewski", "123456789", "Klient1@example.com", "Mężczyzna", DateTime.UtcNow, null);

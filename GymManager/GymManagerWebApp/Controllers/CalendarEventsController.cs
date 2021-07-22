@@ -58,9 +58,6 @@ namespace GymManagerWebApp.Controllers
         {
             var eventId = await _calendarEventService.GetEventIdByReservationIdAsync(reservationNr);
 
-           
-
-
             await _reservationService.RemoveReservation(reservationNr);
             await _calendarEventService.IncreaseAvailableVacanciesAsync(eventId);
 
