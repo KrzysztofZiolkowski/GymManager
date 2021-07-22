@@ -7,6 +7,10 @@ namespace GymManagerWebApp.Models
 {
     public class Coach : User
     {
+        public Coach()
+        {
+
+        }
         public Coach(string firstName, string lastName, string phoneNumber, string email, string gender, DateTime createdAt, string profilePicture)
         {
             FirstName = firstName;

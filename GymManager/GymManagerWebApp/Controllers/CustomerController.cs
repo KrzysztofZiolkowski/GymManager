@@ -126,10 +126,11 @@ namespace GymManagerWebApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult EditProfile()
+        public async Task<IActionResult> EditProfile()
         {
-            var currentCustomer = (Customer)User.Identity;
-            var currentUserEditViewModel = _userService.CreateEditProfileViewModel(currentCustomer);
+            var currentCustomerEmail = User.Identity.Name;
+            var currentCustomer = await _userService.GetUserByEmailAsync(currentCustomerEmail);
+            var currentUserEditViewModel = _userService.CreateEditProfileViewModel((Customer)currentCustomer);
 
             return View(currentUserEditViewModel);
         }

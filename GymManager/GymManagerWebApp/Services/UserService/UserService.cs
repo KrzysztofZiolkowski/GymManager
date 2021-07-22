@@ -39,7 +39,6 @@ namespace GymManagerWebApp.Services
         {
             await _signInManager.SignOutAsync();
         }
-
         public async Task<Customer> GetUserByIdAsync(string userId)
         {
             return (Customer)await _dbContext.Users
@@ -81,8 +80,6 @@ namespace GymManagerWebApp.Services
         {
             return users.OrderBy(x => x.Email).ToList();
         }
-
-
         public User CreateAddUserViewModel(AddUserViewModel model)
         {
             var user = new User()
@@ -162,13 +159,10 @@ namespace GymManagerWebApp.Services
 
             return result;
         }
-
-        
         public string FormatTextFirstLetterBigRestSmall(string textToTransform)
         {
             return char.ToUpper(textToTransform[0]) + textToTransform.Substring(1);
         }
-
         public async Task<IdentityResult> RemoveUser (string userId)
         {
             var userToRemove = await _userManager.FindByIdAsync(userId);
