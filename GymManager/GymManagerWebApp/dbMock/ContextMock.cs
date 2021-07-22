@@ -12,10 +12,10 @@ namespace GymManagerWebApp.dbMock
 {
     public static class ContextMock
     {
-        private static string adminRoleName = "Administrator";
-        private static string coachRoleName = "Trener";
-        private static string receptionistRoleName = "Pracownik recepcji";
-        private static string customerRoleName = "Klient";
+        private static readonly string adminRoleName = "Administrator";
+        private static readonly string coachRoleName = "Trener";
+        private static readonly string receptionistRoleName = "Pracownik recepcji";
+        private static readonly string customerRoleName = "Klient";
 
         public static string GetCustomerRoleName()
         {
@@ -24,16 +24,81 @@ namespace GymManagerWebApp.dbMock
         public static void MockExampleData(GymManagerContext context)
         {
             {
+                var admin = new User() {
+                    FirstName = "Krzysztof",
+                    LastName = "Ziółkowski",
+                    PhoneNumber = "513558514",
+                    Email = "admin@example.com",
+                    UserName = "admin@example.com",
+                    NormalizedEmail = "ADMIN@EXAMPLE.COM",
+                    NormalizedUserName = "ADMIN@EXAMPLE.COM",
+                    Gender = "Mężczyzna",
+                    CreatedAt = DateTime.UtcNow,
+                    ProfilePicture = null,
+                    PasswordHash = "AQAAAAEAACcQAAAAEFPG/u9+LV6N7VfhuDQ77RZ4nIkXBdkigyO1zdZnMt+/c6Hfj2fmZpawt9hTwQTlEw=="
+                };
+
+                var customer1 = new Customer() {
+                    FirstName = "Patryk",
+                    LastName = "Zakrzewski",
+                    PhoneNumber = "123456789",
+                    Email = "Klient1@example.com",
+                    UserName = "Klient1@example.com",
+                    NormalizedEmail = "KLIENT1@EXAMPLE.COM",
+                    NormalizedUserName = "KLIENT1@EXAMPLE.COM",
+                    Gender = "Mężczyzna",
+                    CreatedAt = DateTime.UtcNow,
+                    ProfilePicture = null,
+                    PasswordHash = "AQAAAAEAACcQAAAAEFPG/u9+LV6N7VfhuDQ77RZ4nIkXBdkigyO1zdZnMt+/c6Hfj2fmZpawt9hTwQTlEw=="
+                };
+
+                var customer2 = new Customer()
+                {
+                    FirstName = "Katarzyna",
+                    LastName = "Błaszkowska",
+                    PhoneNumber = "123456789",
+                    Email = "Klient2@example.com",
+                    UserName = "Klient2@example.com",
+                    NormalizedEmail = "KLIENT2@EXAMPLE.COM",
+                    NormalizedUserName = "KLIENT2@EXAMPLE.COM",
+                    Gender = "Mężczyzna",
+                    CreatedAt = DateTime.UtcNow,
+                    ProfilePicture = null,
+                    PasswordHash = "AQAAAAEAACcQAAAAEFPG/u9+LV6N7VfhuDQ77RZ4nIkXBdkigyO1zdZnMt+/c6Hfj2fmZpawt9hTwQTlEw=="
+                };
+
+                var coach1 = new Coach() {
+                    FirstName = "fRobert",
+                    LastName = "Burneika",
+                    PhoneNumber = "123456789",
+                    Email = "Trener1@example.com",
+                    UserName = "Trener1@example.com",
+                    NormalizedEmail = "TRENER1@EXAMPLE.COM",
+                    NormalizedUserName = "TRENER1@EXAMPLE.COM",
+                    Gender = "Mężczyzna",
+                    CreatedAt = DateTime.UtcNow,
+                    ProfilePicture = null,
+                    PasswordHash = "AQAAAAEAACcQAAAAEFPG/u9+LV6N7VfhuDQ77RZ4nIkXBdkigyO1zdZnMt+/c6Hfj2fmZpawt9hTwQTlEw=="
+                };
+                
+                var coach2 = new Coach() { 
+                    FirstName="Sylwester", 
+                    LastName= "Stallone", 
+                    PhoneNumber = "123456789",
+                    Email = "Trener2@example.com",
+                    UserName = "Trener2@example.com",
+                    NormalizedEmail = "TRENER2@EXAMPLE.COM",
+                    NormalizedUserName = "TRENER2@EXAMPLE.COM",
+                    Gender = "Mężczyzna",
+                    CreatedAt = DateTime.UtcNow,
+                    ProfilePicture = null,
+                    PasswordHash = "AQAAAAEAACcQAAAAEFPG/u9+LV6N7VfhuDQ77RZ4nIkXBdkigyO1zdZnMt+/c6Hfj2fmZpawt9hTwQTlEw=="
+                };
+
                 var adminIdentityRole = new IdentityRole() { Name = adminRoleName, NormalizedName = adminRoleName };
                 var coachIdentityRole = new IdentityRole() { Name = coachRoleName, NormalizedName = coachRoleName };
                 var receptionistIdentityRole = new IdentityRole() { Name = receptionistRoleName, NormalizedName = receptionistRoleName };
                 var customerIdentityRole = new IdentityRole() { Name = customerRoleName, NormalizedName = customerRoleName };
-
-                var admin = new User("Krzysztof", "Ziółkowski", "Mężczyzna", DateTime.UtcNow, null);
-                var customer1 = new Customer("Patryk", "Zakrzewski", "123456789", "Klient1@example.com", "Mężczyzna", DateTime.UtcNow, null);
-                var customer2 = new Customer("Katarzyna", "Błaszkowska", "123456789", "Klient2@example.com", "Mężczyzna", DateTime.UtcNow, null);
-                var coach1 = new Coach("Robert", "Burneika", "123456789", "Trener1@example.com", "Mężczyzna", DateTime.UtcNow, null);
-                var coach2 = new Coach("Sylwester", "Stallone", "123456789", "Trener2@example.com", "Mężczyzna", DateTime.UtcNow, null);
 
                 var adminUserRole = new IdentityUserRole<string>() { UserId = admin.Id, RoleId = adminIdentityRole.Id };
                 var customer1UserRole = new IdentityUserRole<string>() { UserId = customer1.Id, RoleId = customerIdentityRole.Id };
