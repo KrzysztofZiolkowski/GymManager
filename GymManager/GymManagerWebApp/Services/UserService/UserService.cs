@@ -16,16 +16,14 @@ namespace GymManagerWebApp.Services
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly GymManagerContext _dbContext;
         private readonly IFileService _fileService;
 
-        public UserService(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager, GymManagerContext dbContext,
+        public UserService(UserManager<User> userManager, SignInManager<User> signInManager,GymManagerContext dbContext,
             IFileService fileService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _roleManager = roleManager;
             _dbContext = dbContext;
             _fileService = fileService;
         }
@@ -76,9 +74,13 @@ namespace GymManagerWebApp.Services
 
             return roleName;
         }
-        public List<User> SortUsersByEmails(List<User> users)
+        public async Task<IdentityResult> CreateUser(AddUserViewModel model)
         {
-            return users.OrderBy(x => x.Email).ToList();
+            var newUser = CreateAddUserViewModel(model);
+            await _userManager.AddToRoleAsync(newUser, model.Role);
+            var result = await _userManager.CreateAsync(newUser, model.Password1);
+
+            return result;
         }
         public User CreateAddUserViewModel(AddUserViewModel model)
         {
@@ -129,12 +131,11 @@ namespace GymManagerWebApp.Services
         }
         public User CreateUpdatedUserModel(User userToUpdate, EditProfileViewModel newUserData)
         {
-            userToUpdate.Email = newUserData.Email;
             userToUpdate.FirstName = newUserData.FirstName;
             userToUpdate.LastName = newUserData.LastName;
-            userToUpdate.Email = newUserData.Email;
             userToUpdate.PhoneNumber = newUserData.PhoneNumber;
             userToUpdate.Gender = newUserData.Gender;
+            userToUpdate.ProfilePicture =  _fileService.UploadFile(newUserData);
 
             return userToUpdate;
         }
@@ -151,29 +152,17 @@ namespace GymManagerWebApp.Services
                 ProfilePicturePath = currrentUser.ProfilePicture,
             };
         }
-        public async Task<IdentityResult> CreateUser(AddUserViewModel model)
-        {
-            var newUser = CreateAddUserViewModel(model);
-            await _userManager.AddToRoleAsync(newUser, model.Role);
-            var result = await _userManager.CreateAsync(newUser, model.Password1);
-
-            return result;
-        }
-        public string FormatTextFirstLetterBigRestSmall(string textToTransform)
-        {
-            return char.ToUpper(textToTransform[0]) + textToTransform.Substring(1);
-        }
         public async Task<IdentityResult> RemoveUser (string userId)
         {
             var userToRemove = await _userManager.FindByIdAsync(userId);
             return await _userManager.DeleteAsync(userToRemove);
         }
-        public async Task<IdentityResult> UpdateUser (EditProfileViewModel newModel)
+        public async Task<IdentityResult> UpdateCustomer (EditProfileViewModel newCustomerData, string curruentCustomerId)
         {
-            var userToUpdate = await _userManager.FindByIdAsync(newModel.Id);
-            var updatedUser = CreateUpdatedUserModel(userToUpdate, newModel);
+            var customerToUpdate = await _userManager.FindByIdAsync(curruentCustomerId);
+            var updatedCustomer = CreateUpdatedUserModel(customerToUpdate, newCustomerData);
 
-            return await _userManager.UpdateAsync(updatedUser);
+            return await _userManager.UpdateAsync(updatedCustomer);
         }
         public async Task UpdateUserRole(User userToUpdate, string newRole)
         {
@@ -181,19 +170,13 @@ namespace GymManagerWebApp.Services
             await _userManager.RemoveFromRolesAsync(userToUpdate, roles);
             await _userManager.AddToRoleAsync(userToUpdate, newRole);
         }
-        public User UpdateUserAttributes(EditProfileViewModel userFromView, User userToUpdate)
+        public string FormatTextFirstLetterBigRestSmall(string textToTransform)
         {
-            userToUpdate.FirstName = userFromView.FirstName;
-            userToUpdate.LastName = userFromView.LastName;
-            userToUpdate.PhoneNumber = userFromView.PhoneNumber;
-            userToUpdate.Gender = userFromView.Gender;
-
-            if (userFromView.ProfilePicture != null)
-            {
-                userToUpdate.ProfilePicture = _fileService.UploadFile(userFromView);
-            }
-
-            return userToUpdate;
+            return char.ToUpper(textToTransform[0]) + textToTransform.Substring(1);
+        }
+        public List<User> SortUsersByEmails(List<User> users)
+        {
+            return users.OrderBy(x => x.Email).ToList();
         }
     }
 }

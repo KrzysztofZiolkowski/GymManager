@@ -15,19 +15,18 @@ namespace GymManagerWebApp.Services
         [Authorize(Roles = "Admin")]
         Task<User> GetUserByEmailAsync(string email);
         [Authorize(Roles = "Admin")]
+        Task<string> GetUserIdByEmailAsync(string email);
         Task<Customer> GetUserByIdAsync(string userId);
         Task<List<User>> GetUsersAsync(string currentUserEmail);
+        Task<IdentityResult> CreateUser(AddUserViewModel model);
+        Customer CreateCustomerViewModel(RegisterCustomerViewModel model);
+        EditProfileViewModel CreateEditProfileViewModel(Customer currrentUser);
         User CreateAddUserViewModel(AddUserViewModel model);
         EditUserViewModel CreateEditUserViewModel(User model, string modelRole, List<string> allRoles);
         Task<SignInResult> LoginAsync(LoginViewModel login);
         Task LogoutAsync();
-        List<User> SortUsersByEmails(List<User> users);
-        Task<string> GetUserIdByEmailAsync(string email);
-        Task<IdentityResult> CreateUser(AddUserViewModel model);
         Task<IdentityResult> RemoveUser(string userId);
-        Task<IdentityResult> UpdateUser(EditProfileViewModel newModel);
-        Customer CreateCustomerViewModel(RegisterCustomerViewModel model);
-        EditProfileViewModel CreateEditProfileViewModel(Customer currrentUser);
-        User UpdateUserAttributes(EditProfileViewModel userFromView, User userToUpdate);
+        Task<IdentityResult> UpdateCustomer(EditProfileViewModel newCustomerData, string currentCustomerId);
+        List<User> SortUsersByEmails(List<User> users);
     }
 }

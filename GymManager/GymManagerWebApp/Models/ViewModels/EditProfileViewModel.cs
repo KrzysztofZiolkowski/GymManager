@@ -29,11 +29,6 @@ namespace GymManagerWebApp.Models
         [DataType(DataType.PhoneNumber)]
         public override string PhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "Wymagany adres e-mail")]
-        [EmailAddress(ErrorMessage = "Nieprawidłowy adres e-mail")]
-        [DataType(DataType.EmailAddress)]
-        public override string Email { get; set; }
-
         [Required(ErrorMessage = "Wymagane zaznaczenie płci")]
         public string Gender { get; set; }
         public string ProfilePicturePath { get; set; }

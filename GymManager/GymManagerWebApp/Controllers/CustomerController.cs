@@ -130,15 +130,18 @@ namespace GymManagerWebApp.Controllers
         {
             var currentCustomerEmail = User.Identity.Name;
             var currentCustomer = await _userService.GetUserByEmailAsync(currentCustomerEmail);
-            var currentUserEditViewModel = _userService.CreateEditProfileViewModel((Customer)currentCustomer);
+            var currentCustomerEditProfileViewModel = _userService.CreateEditProfileViewModel((Customer)currentCustomer);
 
-            return View(currentUserEditViewModel);
+            return View(currentCustomerEditProfileViewModel);
         }
 
         [HttpPost]
         public async Task<IActionResult> EditProfile(EditProfileViewModel model)
         {
-            var result = await _userService.UpdateUser(model);
+            var currentCustomerEmail = User.Identity.Name;
+            var currentCustomer = await _userService.GetUserByEmailAsync(currentCustomerEmail);
+
+            var result = await _userService.UpdateCustomer(model, currentCustomer.Id);
 
             if (result.Succeeded)
             {
@@ -158,7 +161,8 @@ namespace GymManagerWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> RemoveProfilePicture(EditProfileViewModel model)
         {
-            var currentCustomer = await _userService.GetUserByIdAsync(model.Id);
+            var currentCustomerEmail = User.Identity.Name;
+            var currentCustomer = await _userService.GetUserByEmailAsync(currentCustomerEmail);
 
             currentCustomer.ProfilePicture = null;
             await _userManager.UpdateAsync(currentCustomer);
