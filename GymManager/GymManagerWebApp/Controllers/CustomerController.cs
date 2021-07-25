@@ -3,8 +3,11 @@ using GymManagerWebApp.Services;
 using GymManagerWebApp.Services.FileService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GymManagerWebApp.Controllers
@@ -52,13 +55,10 @@ namespace GymManagerWebApp.Controllers
                     return View("RegisterConfirmation");
                 }
 
-                else
+                foreach (var error in result.Errors)
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        _logger.LogDebug($"Failed to register new user, details: {error.Description}");
-                        ModelState.AddModelError("", error.Description);
-                    }
+                    _logger.LogDebug($"Failed to register new user, details: {error.Description}");
+                    ModelState.AddModelError("", error.Description);
                 }
             }
             return View();
@@ -141,21 +141,29 @@ namespace GymManagerWebApp.Controllers
             var currentCustomerEmail = User.Identity.Name;
             var currentCustomer = await _userService.GetUserByEmailAsync(currentCustomerEmail);
 
-            var result = await _userService.UpdateCustomer(model, currentCustomer.Id);
-
-            if (result.Succeeded)
+            if (ModelState.IsValid)
             {
-                _logger.LogInformation($"User of id: {model.Id} | Profle edited by his own");
-                return View("EditProfileConfirmation");
+                var result = await _userService.UpdateCustomer(model, currentCustomer.Id);
+
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation($"User of id: {model.Id} | Profle edit succeeded");
+                    return View("EditProfileConfirmation");
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    _logger.LogDebug($"User of id: {model.Id} | Failed to edit profile| Details: {error.Description}");
+                    ModelState.AddModelError("", error.Description);
+                }
             }
 
-            foreach (var error in result.Errors)
-            {
-                _logger.LogDebug($"User of id: {model.Id} | Failed to edit profile by his own | Details: {error.Description}");
-                ModelState.AddModelError("", error.Description);
-            }
-            return View(model);
+            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+            _logger.LogDebug($"User of id: {model.Id}| Failed to edit profile- wrong attributes | {allErrors}");
 
+            var oldCustomerEditProfileViewModel = _userService.CreateEditProfileViewModel((Customer)currentCustomer);
+
+            return View(oldCustomerEditProfileViewModel);
         }
 
         [HttpPost]
