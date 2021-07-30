@@ -68,7 +68,7 @@ namespace GymManagerWebApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Carnet");
+                    b.ToTable("Carnets");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Carnet");
                 });

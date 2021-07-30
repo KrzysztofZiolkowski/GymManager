@@ -44,8 +44,7 @@ namespace GymManagerWebApp.Services
         }
         public async Task<User> GetUserByEmailAsync(string email)
         {
-            return await _dbContext.Users
-                    .SingleOrDefaultAsync(x => x.Email == email);
+            return await _dbContext.Users.SingleOrDefaultAsync(x => x.Email == email);
         }
         public async Task<string> GetUserIdByEmailAsync(string email)
         {

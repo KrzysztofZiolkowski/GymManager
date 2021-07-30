@@ -14,6 +14,7 @@ namespace GymManagerWebApp.Data
             builder.HasMany(x => x.Purchases).WithOne(x => x.Customer);
             builder.HasMany(x => x.Reservations).WithOne(x => x.Customer);
         }
+
     }
 
 }

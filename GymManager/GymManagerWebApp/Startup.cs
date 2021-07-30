@@ -82,9 +82,10 @@ namespace GymManagerWebApp
 
             using var scope = app.ApplicationServices.CreateScope();
             using var context = scope.ServiceProvider.GetService<GymManagerContext>();
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-            ContextMock.MockExampleData(context);
+
+           context.Database.EnsureDeleted();
+           context.Database.Migrate();
+           ContextMock.MockExampleData(context);
         }
     }
 }

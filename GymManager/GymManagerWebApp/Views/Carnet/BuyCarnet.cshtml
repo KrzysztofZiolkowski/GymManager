@@ -1,4 +1,4 @@
-﻿@*@model 
+﻿@model GymManagerWebApp.ModelViews.CarnetsOfferViewModel;
 
 @{
     ViewData["Title"] = "Kup karnet";
@@ -9,18 +9,29 @@
     </div>
     <div class="text-left">
         <form asp-controller="Carnet" asp-action="BuyCarnet" method="post">
-            @foreach (var carnet in Model.CarnetList)
-                {
-                    <div class="row-flex-space">
-                        <div>
-                            @carnet.Name, @carnet.Price
-                        </div>
-                        <button asp-for="CarnetType" name="CarnetType" type="submit" value="@carnet.CarnetTypeNumber">
-                            Kup!
-                        </button>
-                    </div>
-                }
+            @foreach (var carnet in Model.QuantityCarnets)
+            {
+            <div class="row-flex-space">
+                <div>
+                    @carnet.Type, @carnet.Price
+                </div>
+                <button name ="carnetId" type="submit" formmethod="post" value="@carnet.Id" class="btn btn-outline-primary btn-sm">Kup!</button>
+            </div>
+            }
         </form>
+
+        <form asp-controller="Carnet" asp-action="BuyCarnet" method="post">
+            @foreach (var carnet in Model.TimeCarnets)
+            {
+            <div class="row-flex-space">
+                <div>
+                    @carnet.Type, @carnet.Price
+                </div>
+                <button name="carnetId" type="submit" formmethod="post" value="@carnet.Id" class="btn btn-outline-primary btn-sm">Kup!</button>
+            </div>
+            }
+        </form>
+
     </div>
 
-</div>*@
+</div>

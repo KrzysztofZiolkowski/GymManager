@@ -2,7 +2,7 @@
 
 namespace GymManagerWebApp.Migrations
 {
-    public partial class AddedCustomerMapping : Migration
+    public partial class x : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

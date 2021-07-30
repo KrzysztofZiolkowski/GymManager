@@ -26,36 +26,30 @@ namespace GymManagerWebApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult BuyCarnet()
+        public async Task<IActionResult> BuyCarnet()
         {
-            return View();
+            var CarnetsOfferViewModel = await _carnetService.GetCarnetOfferAsync();
+            return View(CarnetsOfferViewModel);
         }
 
-        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> BuyCarnet(Carnet model)
+        public async Task<IActionResult> BuyCarnet(int carnetId)
         {
-            const string CARNET_FIELD = "CarnetType";
-            var carnetTypeNr = Int32.Parse(HttpContext.Request.Form[CARNET_FIELD]);
-            var currentUserEmail = HttpContext.User.Identity.Name;
-            var currentUser = _userService.GetUserByEmailAsync(currentUserEmail);
-            var userId = currentUser.Id;
+            var currentCustomerId = await _userService.GetUserIdByEmailAsync(User.Identity.Name);
+            await _carnetService.BuyCarnetAsync(carnetId, currentCustomerId); ;
 
-            _logger.LogInformation($"User with id:{userId} | Purchased ticket: ");
             return View("PurchaseConfirmation");
         }
 
-
-        [Authorize]
         [HttpGet]
-        public async Task<IActionResult> PurchasedCarnets(PurchasedCarnetsViewModel model)
+        public async Task<IActionResult> PurchasedCarnets()
         {
-            var currentUserEmail = HttpContext.User.Identity.Name;
+            var currentCustomerId = await _userService.GetUserIdByEmailAsync(User.Identity.Name);
+            var purchasedCarnetsViewModel= await _carnetService.GetPurchasedCarnetsAsync(currentCustomerId);
 
-            return View("PurchasedCarnets", model);
+            return View(purchasedCarnetsViewModel);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> PurchasedCarnets(PurchasedCarnetsViewModel model, int carnetId) //Activates carnet
         {

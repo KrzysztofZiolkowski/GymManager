@@ -2,7 +2,7 @@
 
 namespace GymManagerWebApp.Migrations
 {
-    public partial class AsbstractCarnet : Migration
+    public partial class ChangedUserPurchases : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

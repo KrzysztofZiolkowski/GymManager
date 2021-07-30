@@ -95,8 +95,8 @@ namespace GymManagerWebApp.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
-                _logger.LogDebug($"Failed login attempt. User id: {customer.Id}");
-                ModelState.AddModelError("", "Nieprawidłowe dane logowania. Spróbój ponownie");
+                _logger.LogDebug($"Failed login attempt. Provided email: {model.Email}");
+                ModelState.AddModelError("", "Nieprawidłowe dane logowania lub konto nie istnieje. Spróbój ponownie");
             }
 
             return View("LogIn", model);
