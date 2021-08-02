@@ -27,7 +27,7 @@ namespace GymManagerWebApp.Models
         public virtual Customer Customer { get; set; }
         public virtual CalendarEvent CalendarEvent { get; set; }
         public virtual TimeCarnetActivation TimeCarnetActivation {get;set;}
-        public virtual QuantityCarnetSingleActivation QuantityCarnetSingleActivation { get; set; }
+        public virtual QuantityCarnetActivation QuantityCarnetSingleActivation { get; set; }
 
     }
 }

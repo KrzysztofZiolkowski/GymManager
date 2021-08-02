@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace GymManagerWebApp.Data
 {
-    public class QuantityCarnetActivationConfiguration : IEntityTypeConfiguration<QuantityCarnetActivation>
+    public class QuantityCarnetActivationConfiguration : IEntityTypeConfiguration<QuantityCarnetActivations>
     {
-        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<QuantityCarnetActivation> builder)
+        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<QuantityCarnetActivations> builder)
         {
             builder
                 .HasMany(x => x.QuantityCarnetSingleActivations)

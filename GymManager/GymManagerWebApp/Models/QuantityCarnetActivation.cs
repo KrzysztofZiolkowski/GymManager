@@ -1,13 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GymManagerWebApp.Models
 {
-    public class QuantityCarnetActivation : PurchaseActivation
+    public class QuantityCarnetActivation
     {
-        public virtual IList<QuantityCarnetSingleActivation> QuantityCarnetSingleActivations{ get; set; } = new List<QuantityCarnetSingleActivation>();
-        public int EtrancesLeft { get; set; }
+        public int Id { get; set; }
+        public DateTime ActivationDate { get; set; }
+        public int PurchaseActivationId {get;set;}
+        public virtual QuantityCarnet QuantityCarnet { get; set; }
+        public int ReservationId { get; set; }
+        public virtual Reservation Reservation { get; set; }
+
     }
 }

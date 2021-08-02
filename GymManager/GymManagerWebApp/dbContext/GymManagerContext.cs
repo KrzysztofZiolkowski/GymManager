@@ -11,8 +11,8 @@ namespace GymManagerWebApp.Data
 {
     public class GymManagerContext : IdentityDbContext<User>
     {
-        public GymManagerContext(DbContextOptions<GymManagerContext> options): base(options){}
-        public GymManagerContext(){ }
+        public GymManagerContext(DbContextOptions<GymManagerContext> options) : base(options) { }
+        public GymManagerContext() { }
 
         public override DbSet<User> Users { get; set; }
         public DbSet<Customer> Customers { get; set; }
@@ -24,11 +24,11 @@ namespace GymManagerWebApp.Data
         public DbSet<Coach> Coaches { get; set; }
         public DbSet<Exercise> Exercises { get; set; }
         public DbSet<Room> Rooms { get; set; }
-        public DbSet<Carnet> Carnets { get; set; }
+        public DbSet<CarnetOffer> CarnetsOffer { get; set; }
         public DbSet<PurchaseActivation> PurchaseActivations { get; set; }
         public DbSet<TimeCarnetActivation> TimeCarnetActivations { get; set; }
-        public DbSet<QuantityCarnetActivation> QuantityCarnetAcitvations { get; set; }
-        public DbSet<QuantityCarnetSingleActivation> QuantityCarnetSingleActivations { get; set; }
+        public DbSet<QuantityCarnetActivations> QuantityCarnetAcitvations { get; set; }
+        public DbSet<QuantityCarnetActivation> QuantityCarnetSingleActivations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

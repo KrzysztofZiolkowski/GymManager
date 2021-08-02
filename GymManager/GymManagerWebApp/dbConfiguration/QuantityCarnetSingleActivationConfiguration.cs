@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace GymManagerWebApp.Data
 {
-    public class QuantityCarnetSingleActivationConfiguration : IEntityTypeConfiguration<QuantityCarnetSingleActivation>
+    public class QuantityCarnetSingleActivationConfiguration : IEntityTypeConfiguration<QuantityCarnetActivation>
     {
-        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<QuantityCarnetSingleActivation> builder)
+        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<QuantityCarnetActivation> builder)
         {
             builder
                 .HasOne(x => x.Reservation)
                 .WithOne(x => x.QuantityCarnetSingleActivation)
-                .HasForeignKey<QuantityCarnetSingleActivation>(x => x.ReservationId);
+                .HasForeignKey<QuantityCarnetActivation>(x => x.ReservationId);
         }
     }
 

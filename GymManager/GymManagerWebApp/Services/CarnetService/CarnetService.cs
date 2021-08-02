@@ -30,7 +30,7 @@ namespace GymManagerWebApp.Services.CarnetService
         }
        public async Task BuyCarnetAsync(int carnetId, string customerId)
         {
-            var purchasedCarnet = await _dbContext.Carnets.FindAsync(carnetId);
+            var purchasedCarnet = await _dbContext.CarnetsOffer.FindAsync(carnetId);
             var currentCustomer = (Customer) await _dbContext.Users.FindAsync(customerId);
             var purchaseExpireMonthsLimit = 12;
 
@@ -46,23 +46,29 @@ namespace GymManagerWebApp.Services.CarnetService
             _dbContext.Purchases.Attach(purchase);
             await _dbContext.SaveChangesAsync();
         }
- 
+
         public async Task<PurchasedCarnetsViewModel> GetPurchasedCarnetsAsync(string customerId)
         {
             var timeCarnets = await _dbContext.Purchases
                 .Where(x => x.Customer.Id == customerId)
-                .OfType<TimeCarnet>()
+                .Include(x => x.Activation)
+                .Include(x => x.Date)
+                .Include(x => x.Carnet)
+                .Where(x => x.Carnet.CategoryName == "czasowy")
                 .ToListAsync();
 
             var quantityCarnets = await _dbContext.Purchases
                 .Where(x => x.Customer.Id == customerId)
-                .OfType<QuantityCarnet>()
+                .Include(x => x.Activation)
+                .Include(x => x.Date)
+                .Include(x => x.Carnet)
+                .Where(x => x.Carnet.CategoryName == "ilosciowy")
                 .ToListAsync();
 
             return new PurchasedCarnetsViewModel()
             {
-                TimeCarnets = timeCarnets,
                 QuantityCarnets = quantityCarnets,
+                TimeCarnets = timeCarnets,
             };
         }
     }

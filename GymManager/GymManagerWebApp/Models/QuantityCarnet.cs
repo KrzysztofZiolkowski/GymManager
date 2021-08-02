@@ -4,12 +4,13 @@ using System.Collections.Generic;
 
 namespace GymManagerWebApp
 {
-    public class QuantityCarnet : Carnet
+    public class QuantityCarnet : CarnetOffer
     {
         public int TotalEtrances { get; set; }
-        public QuantityCarnet(string type, double price, int totalEtrances)
+        public virtual IList<QuantityCarnetActivation> QuantityCarnetActivations { get; set; } = new List<QuantityCarnetActivation>();
+        public QuantityCarnet(string categoryName, double price, int totalEtrances)
         {
-            Type = type;
+            CategoryName = categoryName;
             Price = price;
             TotalEtrances = totalEtrances;
         }

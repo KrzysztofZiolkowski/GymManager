@@ -45,7 +45,7 @@ namespace GymManagerWebApp.Controllers
         public async Task<IActionResult> PurchasedCarnets()
         {
             var currentCustomerId = await _userService.GetUserIdByEmailAsync(User.Identity.Name);
-            var purchasedCarnetsViewModel= await _carnetService.GetPurchasedCarnetsAsync(currentCustomerId);
+            var purchasedCarnetsViewModel =  await _carnetService.GetPurchasedCarnetsAsync(currentCustomerId);
 
             return View(purchasedCarnetsViewModel);
         }

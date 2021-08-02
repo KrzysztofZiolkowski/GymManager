@@ -4,12 +4,13 @@ using System.Collections.Generic;
 
 namespace GymManagerWebApp
 {
-    public class TimeCarnet : Carnet
+    public class TimeCarnet : CarnetOffer
     {
         public int PeriodInDays { get; set; }
-        public TimeCarnet(string type, double price, int periodInDays)
+        public TimeCarnetActivation TimeCarnetActivation {get;set;}
+        public TimeCarnet(string categoryName, double price, int periodInDays)
         {
-            Type = type;
+            CategoryName = categoryName;
             Price = price;
             PeriodInDays = periodInDays;
         }

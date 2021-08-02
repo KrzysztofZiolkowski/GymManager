@@ -12,7 +12,7 @@ namespace GymManagerWebApp.Models
         }
 
         public int Id { get; set; }
-        public virtual Carnet Carnet { get; set; }
+        public virtual CarnetOffer Carnet { get; set; }
         public virtual Customer Customer { get; set; }
         public virtual PurchaseActivation Activation { get; set; }
         public DateTime Date { get; set; }

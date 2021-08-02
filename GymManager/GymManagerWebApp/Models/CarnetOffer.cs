@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 
 namespace GymManagerWebApp
 {
- public abstract class Carnet
+    public abstract class CarnetOffer
     {
         public int Id { get; set; }
-        public string Type { get; set; }
-        public double Price { get; set; }
+        public string CategoryName { get; set; }
+        public string SubCategoryName { get; set; }
+        public double Price {get; set;}
     }
 }
