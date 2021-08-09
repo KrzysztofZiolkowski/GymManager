@@ -106,12 +106,9 @@ namespace GymManagerWebApp.dbMock
                 var coach1UserRole = new IdentityUserRole<string>() { UserId = coach1.Id, RoleId = coachIdentityRole.Id };
                 var coach2UserRole = new IdentityUserRole<string>() { UserId = coach2.Id, RoleId = coachIdentityRole.Id };
 
-                var timeCarnet1 = new TimeCarnet(categoryName: "czasowy", price: 10, periodInDays: 7);
-                var timeCarnet2 = new TimeCarnet(categoryName: "czasowy", price: 20, periodInDays: 30);
-                var timeCarnet3 = new TimeCarnet(categoryName: "czasowy", price: 30, periodInDays: 90);
-                var quantityCarnet1 = new QuantityCarnet(categoryName: "ilościowy", price: 10, totalEtrances: 3);
-                var quantityCarnet2 = new QuantityCarnet(categoryName: "ilościowy", price: 20, totalEtrances: 10);
-                var quantityCarnet3 = new QuantityCarnet(categoryName: "ilościowy", price: 30, totalEtrances: 30);
+                var quantityCarnet1 = new Carnet(name: "ilościowy", price: 10, totalEtrances: 3);
+                var quantityCarnet2 = new Carnet(name: "ilościowy", price: 20, totalEtrances: 10);
+                var quantityCarnet3 = new Carnet(name: "ilościowy", price: 30, totalEtrances: 30);
 
                 var room1 = new Room(number: 1, maxCustomersCapacity: 1);
                 var room2 = new Room(number: 2, maxCustomersCapacity: 20);
@@ -148,9 +145,6 @@ namespace GymManagerWebApp.dbMock
                     );
  
                 context.CarnetsOffer.AddRange(
-                    timeCarnet1,
-                    timeCarnet2,
-                    timeCarnet3,
                     quantityCarnet1,
                     quantityCarnet2,
                     quantityCarnet3

@@ -23,6 +23,5 @@ namespace GymManagerWebApp.Models
 
         }
         public virtual IList<Purchase> Purchases { get; set; } = new List<Purchase>();
-        public virtual IList<Reservation> Reservations { get; set; } = new List<Reservation>();
     }
 }

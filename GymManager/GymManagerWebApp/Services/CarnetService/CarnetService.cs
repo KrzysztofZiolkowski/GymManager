@@ -25,7 +25,6 @@ namespace GymManagerWebApp.Services.CarnetService
             return new CarnetsOfferViewModel()
             {
                 QuantityCarnets = await _dbContext.QuantityCarnets.ToListAsync(),
-                TimeCarnets = await _dbContext.TimeCarnets.ToListAsync(),
             };
         }
        public async Task BuyCarnetAsync(int carnetId, string customerId)
@@ -38,8 +37,8 @@ namespace GymManagerWebApp.Services.CarnetService
             {
                 Customer = currentCustomer,
                 Carnet = purchasedCarnet,
-                Date = DateTime.UtcNow,
-                ExpirationDate = DateTime.UtcNow.AddMonths(purchaseExpireMonthsLimit),
+                PurchaseDate = DateTime.UtcNow,
+                ActivationDeadline = DateTime.UtcNow.AddMonths(purchaseExpireMonthsLimit),
                 IsExpired = false
             };
 
@@ -49,26 +48,15 @@ namespace GymManagerWebApp.Services.CarnetService
 
         public async Task<PurchasedCarnetsViewModel> GetPurchasedCarnetsAsync(string customerId)
         {
-            var timeCarnets = await _dbContext.Purchases
+            var customerCarnets = await _dbContext.Purchases
                 .Where(x => x.Customer.Id == customerId)
-                .Include(x => x.Activation)
-                .Include(x => x.Date)
+                .Include(x => x.ActiveCarnets)
                 .Include(x => x.Carnet)
-                .Where(x => x.Carnet.CategoryName == "czasowy")
-                .ToListAsync();
-
-            var quantityCarnets = await _dbContext.Purchases
-                .Where(x => x.Customer.Id == customerId)
-                .Include(x => x.Activation)
-                .Include(x => x.Date)
-                .Include(x => x.Carnet)
-                .Where(x => x.Carnet.CategoryName == "ilosciowy")
                 .ToListAsync();
 
             return new PurchasedCarnetsViewModel()
             {
-                QuantityCarnets = quantityCarnets,
-                TimeCarnets = timeCarnets,
+                PurchasedCarnets= customerCarnets,
             };
         }
     }

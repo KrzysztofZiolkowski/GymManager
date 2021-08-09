@@ -13,25 +13,12 @@
             {
             <div class="row-flex-space">
                 <div>
-                    @carnet.CategoryName, @carnet.Price
+                    @carnet.Name, @carnet.Price
                 </div>
                 <button name ="carnetId" type="submit" formmethod="post" value="@carnet.Id" class="btn btn-outline-primary btn-sm">Kup!</button>
             </div>
             }
         </form>
-
-        <form asp-controller="Carnet" asp-action="BuyCarnet" method="post">
-            @foreach (var carnet in Model.TimeCarnets)
-            {
-            <div class="row-flex-space">
-                <div>
-                    @carnet.CategoryName, @carnet.Price
-                </div>
-                <button name="carnetId" type="submit" formmethod="post" value="@carnet.Id" class="btn btn-outline-primary btn-sm">Kup!</button>
-            </div>
-            }
-        </form>
-
     </div>
 
 </div>

@@ -7,7 +7,6 @@ namespace GymManagerWebApp.Models
 {
     public class PurchasedCarnetsViewModel
     {
-        public virtual IList<TimeCarnet> QuantityCarnets { get; set; } = new List<TimeCarnet>();
-        public virtual IList<QuantityCarnet> TimeCarnets { get; set; } = new List<QuantityCarnet>();
+        public virtual List<Purchase> PurchasedCarnets { get; set; }
     }
 }

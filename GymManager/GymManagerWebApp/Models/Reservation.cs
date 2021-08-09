@@ -9,8 +9,8 @@ namespace GymManagerWebApp.Models
     {
         public Reservation()
         {
-        }
 
+        }
         public Reservation(DateTime activationDate, bool canBeCanceled, bool isActive, Customer customer, CalendarEvent calendarEvent)
         {
             ActivationDate = activationDate;
@@ -26,8 +26,7 @@ namespace GymManagerWebApp.Models
         public bool IsActive { get; set; }
         public virtual Customer Customer { get; set; }
         public virtual CalendarEvent CalendarEvent { get; set; }
-        public virtual TimeCarnetActivation TimeCarnetActivation {get;set;}
-        public virtual QuantityCarnetActivation QuantityCarnetSingleActivation { get; set; }
+        public virtual Purchase Purchase {get;set;}
 
     }
 }

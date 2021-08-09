@@ -15,10 +15,6 @@ namespace GymManagerWebApp.Data
 
         public void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Purchase>()
-                .HasOne(x => x.Activation)
-                .WithOne(x => x.Purchase)
-                .HasForeignKey<PurchaseActivation>(c => c.PurchaseId);
 
             builder.Entity<Purchase>()
                 .Property(x => x.Customer)

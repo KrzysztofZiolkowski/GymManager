@@ -56,8 +56,6 @@ namespace GymManagerWebApp.Controllers
             var userEmail = HttpContext.User.Identity.Name;
             var user = _userService.GetUserByEmailAsync(userEmail);
 
-
-            
             _logger.LogInformation($"User of id: {user.Id} | activated carnet:");
             return View("ActivateCarnetConfirmation");
         }
@@ -67,7 +65,6 @@ namespace GymManagerWebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> AllPurchasedCarnets(PurchasedCarnetsViewModel model)
         {
-
 
             return View("PurchasedCarnets", model);
         }

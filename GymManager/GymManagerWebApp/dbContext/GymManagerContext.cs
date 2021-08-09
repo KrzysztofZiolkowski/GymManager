@@ -16,19 +16,14 @@ namespace GymManagerWebApp.Data
 
         public override DbSet<User> Users { get; set; }
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<TimeCarnet> TimeCarnets { get; set; }
-        public DbSet<QuantityCarnet> QuantityCarnets { get; set; }
+        public DbSet<Carnet> QuantityCarnets { get; set; }
         public DbSet<Purchase> Purchases { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<CalendarEvent> CalendarEvents { get; set; }
         public DbSet<Coach> Coaches { get; set; }
         public DbSet<Exercise> Exercises { get; set; }
         public DbSet<Room> Rooms { get; set; }
-        public DbSet<CarnetOffer> CarnetsOffer { get; set; }
-        public DbSet<PurchaseActivation> PurchaseActivations { get; set; }
-        public DbSet<TimeCarnetActivation> TimeCarnetActivations { get; set; }
-        public DbSet<QuantityCarnetActivations> QuantityCarnetAcitvations { get; set; }
-        public DbSet<QuantityCarnetActivation> QuantityCarnetSingleActivations { get; set; }
+        public DbSet<Carnet> CarnetsOffer { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

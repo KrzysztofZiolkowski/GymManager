@@ -12,7 +12,6 @@ namespace GymManagerWebApp.Data
         public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Customer> builder)
         {
             builder.HasMany(x => x.Purchases).WithOne(x => x.Customer);
-            builder.HasMany(x => x.Reservations).WithOne(x => x.Customer);
         }
 
     }
